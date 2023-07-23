@@ -16,6 +16,7 @@ const style = {
     align-items: center;
     height: calc(100vh - 40px);
     box-shadow: 2px 2px 2px #000000;
+    overflow-y: scroll; 
   `,
   layout: css`
     display: grid;

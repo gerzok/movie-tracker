@@ -18,29 +18,34 @@ export const App = ({ onLoad }) => {
     const getMovies = async () => {
       const fetchMovies = await fetch('/api/movies.json');
       const movies = await fetchMovies.json();
-      // const sortMoviesAlphabetically = movies.sort((a,b) => {
-      //   const titleA = a.title.toUpperCase();
-      //   const titleB = b.title.toUpperCase();
-      //   if (titleA < titleB) {
-      //     return -1;
-      //   }
-      //   if (titleA > titleB) {
-      //     return 1;
-      //   }
-      //   return 0;
-      // });
       const sortMoviesAlphabetically = movies.sort((a,b) => a.title.localeCompare(b.title));
+
       setMovies(sortMoviesAlphabetically);
+      localStorage.setItem('movies', JSON.stringify(sortMoviesAlphabetically));
     };
-    
-    getMovies();
+
+    const moviesFromLocalStorage = localStorage.getItem('movies');
+
+    if (moviesFromLocalStorage !== null) {
+      const parseLocalStorageMovies = JSON.parse(moviesFromLocalStorage);
+      setMovies(parseLocalStorageMovies);
+    } else {
+      getMovies();
+    }
   }, []);
 
   console.log('movies', movies);
 
   return html`
-    <p className=${style}>
-      (this file can be found at ./your-code-here/app.js)
-    </p>
+  <div>
+    <h1>Movies Evan Likes!</h1>
+    <p>Below is a (not) comprehensive list of movies that Evan really likes.</p>
+    <hr />
+    <ul>
+      ${movies.map(movie => html`
+        <li key=${movie.id}><span>${movie.score * 100}%</span> <a href=${movie.url}>${movie.title}</a> <span>(${movie.year})</span></li>
+      `)}
+    </ul>
+  </div>
   `;
 };

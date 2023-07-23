@@ -15,15 +15,19 @@ export const App = ({ onLoad }) => {
   useEffect(onLoad, []); // to run tests
 
   useEffect(() => {
-    const getMovies = async () => {
-      const fetchMovies = await fetch('/api/movies.json');
-      const movies = await fetchMovies.json();
-      const sortMoviesAlphabetically = movies.sort((a,b) => a.title.localeCompare(b.title));
+    localStorageCache();
+  }, []);
 
-      setMovies(sortMoviesAlphabetically);
-      localStorage.setItem('movies', JSON.stringify(sortMoviesAlphabetically));
-    };
+  const getMovies = async () => {
+    const fetchMovies = await fetch('/api/movies.json');
+    const movies = await fetchMovies.json();
+    const sortMoviesAlphabetically = movies.sort((a,b) => a.title.localeCompare(b.title));
 
+    setMovies(sortMoviesAlphabetically);
+    localStorage.setItem('movies', JSON.stringify(sortMoviesAlphabetically));
+  };
+
+  const localStorageCache = () => {
     const moviesFromLocalStorage = localStorage.getItem('movies');
 
     if (moviesFromLocalStorage !== null) {
@@ -32,7 +36,16 @@ export const App = ({ onLoad }) => {
     } else {
       getMovies();
     }
-  }, []);
+  };
+
+  const handleSearch = (search) => {
+    if (search.length >= 2) {
+      const filterMovies = movies.filter((movie) => movie.title.toLowerCase().includes(search));
+      setMovies(filterMovies);
+    } else if (search.length <= 1) {
+      localStorageCache();
+    }
+  };
 
   console.log('movies', movies);
 
@@ -41,6 +54,7 @@ export const App = ({ onLoad }) => {
     <h1>Movies Evan Likes!</h1>
     <p>Below is a (not) comprehensive list of movies that Evan really likes.</p>
     <hr />
+    <input name="search" type="text" onChange=${(e) => handleSearch(e.target.value)} />
     <ul>
       ${movies.map(movie => html`
         <li key=${movie.id}><span>${movie.score * 100}%</span> <a href=${movie.url}>${movie.title}</a> <span>(${movie.year})</span></li>

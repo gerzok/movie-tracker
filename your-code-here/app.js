@@ -12,6 +12,7 @@ const style = css`
 export const App = ({ onLoad }) => {
   const [movies, setMovies] = useState([]);
   const [decades, setDecades] = useState([]);
+  const [selectedDecade, setSelectedDecade] = useState("");
 
   useEffect(onLoad, []); // to run tests
 
@@ -66,10 +67,13 @@ export const App = ({ onLoad }) => {
     const search = str.toLowerCase();
 
     if (search.length >= 2) {
-      const filterMovies = movies.filter((movie) => movie.title.toLowerCase().includes(search));
+      const searchingMovies = selectedDecade ? movies : getMoviesFromCache();
+      const filterMovies = searchingMovies.filter((movie) => movie.title.toLowerCase().includes(search));
       setMovies(filterMovies);
-    } else if (search.length <= 1) {
+    } else if (search.length < 1 && !selectedDecade) {
       localStorageCache();
+    } else if(search.length < 1 && selectedDecade) {
+      handleFilterByDecade(selectedDecade);
     }
   };
 
@@ -78,12 +82,15 @@ export const App = ({ onLoad }) => {
       const moviesFromCache = getMoviesFromCache();
       const filterMovies = moviesFromCache.filter((movie) => Math.floor(movie.year / 10) * 10 === parseInt(decade));
       setMovies(filterMovies);
+      setSelectedDecade(decade);
     } else {
       localStorageCache();
+      setSelectedDecade("");
     }
   };
 
   console.log('movies', movies);
+  console.log('selectedDecade', selectedDecade);
 
   return html`
   <div>

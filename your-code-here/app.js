@@ -22,13 +22,22 @@ const style = {
     background-color: #DDD;
     padding: 10px;
   `,
+
+  cover: css`
+    margin-right: 10px;
+
+    & img {
+      max-width: 120px;
+      height: auto;
+    }
+  `,
 };
 
 const accordion = {
   active: css`
     background-color: #DDD;
-    padding: 10px 20px;
-    display: block;
+    padding: 10px 20px 3px;
+    display: flex;
   `,
   inactive: css`
     display: none;
@@ -166,7 +175,10 @@ export const App = ({ onLoad }) => {
           <li key=${movie.id} className=${movie.id !== toggleAccordion ? style.li : style.liSelected}>
             <div onClick=${(e) => handleAccordion(e, movie.id)}>
               <span>${movie.score * 100}%</span> <a href=${movie.url}>${movie.title}</a> <span>(${movie.year})</span>
-              <div className=${movie.id === toggleAccordion ? accordion.active : accordion.inactive}>${contentReview}</div>
+              <div className=${movie.id === toggleAccordion ? accordion.active : accordion.inactive}>
+                <div className=${style.cover}><img src=${movie["cover-url"]} /></div>
+                <div>${contentReview}</div>
+              </div>
             </div>
           </li>
         `)}

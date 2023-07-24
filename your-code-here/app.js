@@ -159,12 +159,12 @@ export const App = ({ onLoad }) => {
       <hr />
 
       <fieldset>
-        <label>Title contains:</label>
-        <input name="search" type="text" onChange=${(e) => handleSearch(e.target.value)} placeholder="Search by title" />
+        <label htmlFor="search">Title contains:</label>
+        <input name="search" id="search" type="text" onChange=${(e) => handleSearch(e.target.value)} placeholder="Search by title" />
       </fieldset>
       <fieldset>
-        <label>Decade:</label>
-        <select onChange=${(e) => handleFilterByDecade(e.target.value)}>
+        <label htmlFor="decade">Decade:</label>
+        <select name="decade" id="decade" onChange=${(e) => handleFilterByDecade(e.target.value)}>
           <option value="spacer"></option>
           ${decades.map((decade) => html`<option key=${decade} value=${decade}>${decade}</option>`)}
         </select>
@@ -177,7 +177,7 @@ export const App = ({ onLoad }) => {
               <span>${movie.score * 100}%</span> <a href=${movie.url}>${movie.title}</a> <span>(${movie.year})</span>
               <div className=${movie.id === toggleAccordion ? accordion.active : accordion.inactive}>
                 <div className=${style.cover}><img src=${movie["cover-url"]} /></div>
-                <div>${contentReview}</div>
+                <div className="content-review">${contentReview}</div>
               </div>
             </div>
           </li>

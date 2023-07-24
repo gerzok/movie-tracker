@@ -7,8 +7,12 @@ const { useEffect, useState } = React;
 
 const style = {
   container: css`
-  margin: 0 auto;
+    margin: 0 auto;
     width: 45vw;
+  `,
+
+  ul: css`
+    margin-top: 20px;;
   `,
 
   li: css`
@@ -31,6 +35,34 @@ const style = {
       height: auto;
     }
   `,
+
+  searchBoxContainer: css`
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #DDD;
+    border-bottom: 0;
+
+    & input {
+      margin-left: 5px;
+      padding: 10px;
+      border: 1px solid #CCC;
+    }
+  `,
+
+  decadeBoxContainer: css`
+    padding: 15px;
+    border: 1px solid #DDD;
+
+    & select {
+      background-color: white;
+      border: 1px solid #CCC;
+      display: inline-block;
+      font: inherit;
+      line-height: 1.5em;
+      padding: 6px 50px;
+      margin-left: 5px;
+    }
+  `
 };
 
 const accordion = {
@@ -158,11 +190,11 @@ export const App = ({ onLoad }) => {
       <p>Below is a (not) comprehensive list of movies that Evan really likes.</p>
       <hr />
 
-      <fieldset>
+      <fieldset className=${style.searchBoxContainer}>
         <label htmlFor="search">Title contains:</label>
         <input name="search" id="search" type="text" onChange=${(e) => handleSearch(e.target.value)} placeholder="Search by title" />
       </fieldset>
-      <fieldset>
+      <fieldset className=${style.decadeBoxContainer}>
         <label htmlFor="decade">Decade:</label>
         <select name="decade" id="decade" onChange=${(e) => handleFilterByDecade(e.target.value)}>
           <option value="spacer"></option>
@@ -170,7 +202,7 @@ export const App = ({ onLoad }) => {
         </select>
       </fieldset>
 
-      <ul>
+      <ul className=${style.ul}>
         ${movies.map(movie => html`
           <li key=${movie.id} className=${movie.id !== toggleAccordion ? style.li : style.liSelected}>
             <div onClick=${(e) => handleAccordion(e, movie.id)}>
